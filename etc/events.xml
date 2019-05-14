@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="payment_method_is_active">
+        <observer name="PaymentMethodActiveObserver" instance="PayEx\PaymentMenu\Observer\PaymentMethodAvailable" />
+    </event>
+    <event name="payex_paymentmenu_payment_menu_selected">
+        <observer name="PaymentMethodSelectedObserver" instance="PayEx\PaymentMenu\Observer\PaymentMethodSelectedObserver" />
+    </event>
+    <event name="payex_paymentmenu_before_payment_completed">
+        <observer name="BeforePaymentCompletedObserver" instance="PayEx\PaymentMenu\Observer\BeforePaymentCompletedObserver" />
+    </event>
+    <event name="payex_paymentmenu_after_payment_completed">
+        <observer name="AfterPaymentCompletedObserver" instance="PayEx\PaymentMenu\Observer\AfterPaymentCompletedObserver" />
+    </event>
+    <event name="payex_paymentmenu_before_payment_created">
+        <observer name="PaymentCreatedObserver" instance="PayEx\PaymentMenu\Observer\PaymentCreatedObserver" />
+    </event>
+    <event name="payex_paymentmenu_before_payment_error">
+        <observer name="PaymentErrorObserver" instance="PayEx\PaymentMenu\Observer\PaymentErrorObserver" />
+    </event>
+    <event name="payex_paymentmenu_before_payment_failed">
+        <observer name="PaymentFailedObserver" instance="PayEx\PaymentMenu\Observer\PaymentFailedObserver" />
+    </event>
+    <event name="payex_paymentmenu_before_payment_menu_instrument_selected">
+        <observer name="PaymentMenuInstrumentSelectedObserver" instance="PayEx\PaymentMenu\Observer\PaymentMenuInstrumentSelectedObserverObserver" />
+    </event>
+    <event name="payex_paymentmenu_before_payment_tos">
+        <observer name="PaymentTosObserver" instance="PayEx\PaymentMenu\Observer\PaymentTosObserver" />
+    </event>
+    <event name="payex_paymentmenu_before_payment_cancel">
+        <observer name="PaymentCancelObserver" instance="PayEx\PaymentMenu\Observer\PaymentCancelObserver" />
+    </event>
+</config>
