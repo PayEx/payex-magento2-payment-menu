@@ -10,8 +10,13 @@ class Config extends CoreConfig
 {
     const XML_CONFIG_GROUP = 'payment_menu';
 
+    protected $moduleDependencies = [
+        'PayEx_Client',
+        'PayEx_Checkout'
+    ];
+
     /**
-     * Get the order status that should be set on orders that have been processed by Klarna
+     * Get the order status that should be set on orders that have been processed by PayEx
      *
      * @param Store|int|string|null  $store
      *
@@ -20,17 +25,5 @@ class Config extends CoreConfig
     public function getProcessedOrderStatus($store = null)
     {
         return $this->getPaymentValue('order_status', ConfigProvider::CODE, $store);
-    }
-
-    /**
-     * Overrides the default isActive() so that we get the value from the payment method scope
-     *
-     * @param Store|int|string|null  $store
-     *
-     * @return bool
-     */
-    public function isActive($store = null)
-    {
-        return $this->getPaymentValue('active', ConfigProvider::CODE, $store);
     }
 }

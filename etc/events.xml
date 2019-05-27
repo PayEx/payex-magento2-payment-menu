@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="payment_method_is_active">
+        <observer name="PaymentMethodActiveObserver" instance="PayEx\PaymentMenu\Observer\PaymentMethodAvailable" />
+    </event>
     <event name="payex_paymentmenu_payment_menu_selected">
         <observer name="PaymentMethodSelectedObserver" instance="PayEx\PaymentMenu\Observer\PaymentMethodSelectedObserver" />
     </event>

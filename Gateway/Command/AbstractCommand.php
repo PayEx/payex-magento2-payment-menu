@@ -95,11 +95,11 @@ abstract class AbstractCommand extends DataObject implements CommandInterface
     /**
      * AbstractCommand constructor.
      *
-     * @param PaymentOrderRepository $paymentOrderRepository
-     * @param PaymentQuoteRepository $paymentQuoteRepository
+     * @param PaymentOrderRepository $paymentOrderRepo
+     * @param PaymentQuoteRepository $paymentQuoteRepo
      * @param ClientRequestService $requestService
-     * @param MageQuoteRepository $mageQuoteRepository
-     * @param MageOrderRepository $mageOrderRepository
+     * @param MageQuoteRepository $mageQuoteRepo
+     * @param MageOrderRepository $mageOrderRepo
      * @param ClientConfig $clientConfig
      * @param PaymentMenuConfig $paymentMenuConfig
      * @param MessageManager $messageManager
