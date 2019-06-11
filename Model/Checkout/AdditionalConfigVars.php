@@ -5,6 +5,7 @@ namespace PayEx\PaymentMenu\Model\Checkout;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\UrlInterface;
+use PayEx\PaymentMenu\Helper\Config as ConfigHelper;
 
 class AdditionalConfigVars implements ConfigProviderInterface
 {
@@ -18,12 +19,19 @@ class AdditionalConfigVars implements ConfigProviderInterface
      */
     protected $locale;
 
+    /**
+     * @var ConfigHelper
+     */
+    protected $configHelper;
+
     public function __construct(
         Resolver $locale,
-        UrlInterface $urlBuilder
+        UrlInterface $urlBuilder,
+        ConfigHelper $configHelper
     ) {
         $this->locale = $locale;
         $this->urlBuilder = $urlBuilder;
+        $this->configHelper = $configHelper;
     }
 
     /**
@@ -33,6 +41,7 @@ class AdditionalConfigVars implements ConfigProviderInterface
     {
         return [
             'PayEx_PaymentMenu' => [
+                'isEnabled' => $this->configHelper->isActive(),
                 'culture' => str_replace('_', '-', $this->locale->getLocale()),
                 'onPaymentCancel' => $this->urlBuilder->getUrl('PayExPaymentMenu/Index/OnPaymentCancel'),
                 'onPaymentCapture' => $this->urlBuilder->getUrl('PayExPaymentMenu/Index/OnPaymentCapture'),
