@@ -22,7 +22,12 @@ class TosPage implements \Magento\Framework\Option\ArrayInterface
      */
     public function toOptionArray()
     {
-        $res = array();
+        $res = [
+            [
+                'value' => '',
+                'label' => __('Please select')
+            ]
+        ];
 
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('is_active', \Magento\Cms\Model\Page::STATUS_ENABLED);
