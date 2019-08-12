@@ -8,7 +8,7 @@ use Magento\Framework\Event\ObserverInterface;
 use PayEx\PaymentMenu\Model\Ui\ConfigProvider;
 use PayEx\PaymentMenu\Helper\Config as ConfigHelper;
 
-class PaymentMethodAvailable implements ObserverInterface
+class IsActiveObserver implements ObserverInterface
 {
     protected $configHelper;
 

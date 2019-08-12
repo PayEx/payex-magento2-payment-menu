@@ -2,70 +2,64 @@
 
 namespace PayEx\PaymentMenu\Controller\Index;
 
-use Magento\Framework\App\ResponseInterface;
+use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Event\Manager as EventManager;
-use Magento\Sales\Model\Order;
+
 use PayEx\Core\Logger\Logger;
+use PayEx\PaymentMenu\Helper\Config as ConfigHelper;
+use PayEx\PaymentMenu\Model\Order;
+use PayEx\PaymentMenu\Model\OrderFactory;
+use PayEx\PaymentMenu\Model\ResourceModel\OrderRepository;
+use Magento\Sales\Model\OrderRepository as MagentoOrderRepository;
 
-class OnPaymentFailed extends \Magento\Framework\App\Action\Action
+class OnPaymentFailed extends PaymentActionAbstract
 {
-    /** @var JsonFactory  */
-    protected $resultJsonFactory;
+    /** @var Session  */
+    protected $checkoutSession;
 
-    /** @var EventManager  */
-    protected $eventManager;
+    /** @var OrderRepository */
+    protected $paymentOrderRepo;
 
-    /** @var Order  */
-    protected $order;
+    /** @var MagentoOrderRepository */
+    protected $magentoOrderRepo;
 
-    /** @var Logger  */
-    protected $logger;
+    /** @var OrderFactory  */
+    protected $orderFactory;
 
     public function __construct(
         Context $context,
         JsonFactory $resultJsonFactory,
         EventManager $eventManager,
-        Order $order,
-        Logger $logger
+        ConfigHelper $configHelper,
+        Logger $logger,
+        Session $session,
+        OrderRepository $orderRepository,
+        MagentoOrderRepository $magentoOrderRepo,
+        OrderFactory $orderFactory
     ) {
-        parent::__construct($context);
-        $this->resultJsonFactory = $resultJsonFactory;
-        $this->eventManager = $eventManager;
-        $this->order = $order;
-        $this->logger = $logger;
+        parent::__construct($context, $resultJsonFactory, $eventManager, $configHelper, $logger);
+
+        $this->checkoutSession = $session;
+        $this->paymentOrderRepo = $orderRepository;
+        $this->magentoOrderRepo = $magentoOrderRepo;
+        $this->orderFactory = $orderFactory;
+
+        $this->setEventName('payment_failed');
+        $this->setEventMethod([$this, 'holdPaymentOrder']);
+        $this->setEventArgs(['id', 'redirectUrl']);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     * @return ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface
-     * @throws \Exception
-     */
-    public function execute()
+    public function holdPaymentOrder($paymentId = '', $redirectUrl = '')
     {
-        $requestBody = json_decode($this->getRequest()->getContent());
-        $this->eventManager->dispatch(
-            'payex_paymentmenu_before_payment_failed',
-            (array) $requestBody
-        );
+        $order = $this->checkoutSession->getLastRealOrder();
+        $order->setState(\Magento\Sales\Model\Order::STATE_HOLDED);
+        $this->magentoOrderRepo->save($order);
 
-        try {
-            $paymentId = $requestBody->name;
-            $state = $requestBody->state;
-            $redirectUrl = $requestBody->redirectUrl;
-            $this->order->setState(Order::STATE_HOLDED);
-        } catch (\Exception $exception) {
-            $result = $this->resultJsonFactory->create();
-            $result->setData(['result' => 'Wrong request body']);
-            $result->setHttpResponseCode(400);
-            $this->logger->Error('Wrong request body passed to OnPaymentFailed', (array) $requestBody);
-            return $result;
-        }
-
-        $result = $this->resultJsonFactory->create();
-
-        $result->setData(['result' => 'status changed']);
-        return $result;
+        /** @var Order $paymentOrder */
+        $paymentOrder = $this->orderFactory->create();
+        $paymentOrder->setState(\Magento\Sales\Model\Order::STATE_HOLDED);
+        $this->paymentOrderRepo->save($paymentOrder);
     }
 }
