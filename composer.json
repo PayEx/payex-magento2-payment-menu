@@ -1,7 +1,7 @@
 {
   "name": "payex/magento2-payment-menu",
   "type": "magento2-module",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A PayEx Payment Menu module for Magento 2",
   "license": "Apache-2.0",
   "authors": [
