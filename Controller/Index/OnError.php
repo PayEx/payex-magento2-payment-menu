@@ -9,7 +9,7 @@ use Magento\Framework\Event\Manager as EventManager;
 use PayEx\Core\Logger\Logger;
 use PayEx\PaymentMenu\Helper\Config as ConfigHelper;
 
-class OnPaymentMenuInstrumentSelected extends PaymentActionAbstract
+class OnError extends PaymentActionAbstract
 {
     public function __construct(
         Context $context,
@@ -20,7 +20,18 @@ class OnPaymentMenuInstrumentSelected extends PaymentActionAbstract
     ) {
         parent::__construct($context, $resultJsonFactory, $eventManager, $configHelper, $logger);
 
-        $this->setEventName('payment_menu_instrument_selected');
-        $this->setEventArgs(['name', 'instrument']);
+        $this->setEventName('error');
+        $this->setEventArgs(['origin', 'messageId', 'details']);
+        $this->setEventMethod([$this, 'logError']);
+    }
+
+    /**
+     * @param $origin
+     * @param $messageId
+     * @param $details
+     */
+    public function logError($origin, $messageId, $details)
+    {
+        $this->logger->error(sprintf("PayEx Payment Error [%s]: %s", $messageId, $details));
     }
 }

@@ -71,11 +71,11 @@ define([
                 "",
                 true
             ).done(function(response){
-                if(self.paymentScript != response[0]) {
+                if(self.paymentScript != response.result) {
                     self.clearPaymentMenu();
-                    self.renderPaymentMenuScript(response[0]);
+                    self.renderPaymentMenuScript(response.result);
 
-                    self.paymentScript = response[0];
+                    self.paymentScript = response.result;
                     fullscreenLoader.stopLoader();
                 }
             }).fail(function(message){
@@ -96,7 +96,7 @@ define([
                 if(self.paymentScript == scriptSrc) {
                     self.payexSetupHostedView();
                 }
-            }
+            };
 
             script.src = scriptSrc;
         },
@@ -171,6 +171,7 @@ define([
                 true
             ).done(function(response){
                 console.log(response);
+                window.open(response.openUrl, '_blank');
             }).fail(function(message){
                 console.error(message);
             });

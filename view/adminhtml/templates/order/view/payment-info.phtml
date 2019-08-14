@@ -1,0 +1,9 @@
+<?php
+/** @var \PayEx\PaymentMenu\Block\Adminhtml\Order\View\PaymentInfo $this */
+?>
+
+<br />
+<p>
+    <strong>PayEx Payment Order ID:</strong> <?php echo $this->getCurrentPaymentId(); ?><br />
+    <strong>PayEx Payment Instrument:</strong> <?php echo $this->getCurrentPayment()['menu_element_name']; ?>
+</p>
